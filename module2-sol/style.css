@@ -1,0 +1,94 @@
+*{
+	font-family: "Monaco"  ,  monospace;
+
+}
+html{
+	background-color: steelblue;
+
+}
+
+
+.parent {
+	height : 100% ;
+	display : flex;
+
+} 
+h1 {
+  text-align: center;
+  padding-top: 5%;
+  padding-bottom: 5%;
+
+}
+.column {
+	background-color: slategray;
+	align-items: center;
+	height: 100%;
+	border: 3px solid black;
+	position: relative;
+	margin: 15px;
+    box-shadow: 2px 2px 2px 2px skyblue ;
+
+
+} 
+p{
+	clear : right;
+	padding-left: 4px ;
+	font-family: "Verdana" , sans-serif;
+
+}
+.chicken {
+	background-color : pink
+}
+
+.beef {
+	color: white;
+
+	background-color : red
+}
+.sushi {
+	background-color : sandybrown;
+}
+
+h4 {
+	border-color: black;
+	text-align: center;
+	padding: 1px 10px;
+	width: 150px ;
+	height: 30px;
+	margin-top: 0px ;
+	margin-bottom: 5px;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	display : inline-block;
+	float : right ;
+	font-size : 20px
+
+}
+
+
+
+@media (min-width : 768px ) and (max-width: 991px ) {
+    .parent{
+    	flex-wrap : wrap ;
+    }
+
+	#first {
+		width : 45%;
+	}
+    #second{
+    	width: 45%;
+    }
+    #third{
+    	width: 95%;
+    }
+
+}
+@media (max-width: 767px) {
+	.parent{
+		flex-direction: column;
+	}
+	.column {
+		width :100% 
+		margin: 15px;
+	}
+}
