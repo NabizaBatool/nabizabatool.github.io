@@ -21,8 +21,18 @@ body {
     line-height: .75;
     
   }
-  .navbar-header button.navbar-toggle, .navbar-header .icon-bar {
-    border: 2px solid white;
+   .navbar-header .icon-bar {
+    border: 1px solid white;
+    width: 23px;
+   
+
+  }
+
+  .navbar-header button.navbar-toggle{
+    border: 1px solid #333;
+
+
+
   }
   .navbar-brand a:hover, .navbar-brand a:focus {
     text-decoration: none;
