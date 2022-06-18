@@ -52,6 +52,11 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
     };
 
 
+
+
+
+
+
     // Remove the class 'active' from home and switch to Menu button
     var switchMenuToActive = function () {
         // Remove 'active' from home button
@@ -63,7 +68,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         // Add 'active' to menu button if not already there
         classes = document.querySelector("#navMenuButton").className;
         //equals to -1 means not exist 
-        if (classes.indexOf("active") == -1) {
+        if (classes.indexOf("active") === -1) {
             classes += " active";
             document.querySelector("#navMenuButton").className = classes;
         }
@@ -114,7 +119,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
                 $ajaxUtils.sendGetRequest(
                     categoryHtml,
                     function (categoryHtml) {
-                        switchMenuToActive()
+                        switchMenuToActive();
                         var categoriesViewHtml =
                             buildCategoriesViewHtml(categories,
                                 categoriesTitleHtml,
@@ -166,7 +171,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
                 $ajaxUtils.sendGetRequest(
                     menuItemHtml,
                     function (menuItemHtml) {
-                        switchMenuToActive()
+                        switchMenuToActive();   
                         var menuItemsViewHtml =
                             buildMenuItemsViewHtml(categoryMenuItems,
                                 menuItemsTitleHtml,
@@ -201,7 +206,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         var menuItems = categoryMenuItems.menu_items;
         // lunch ka short name is L 
         var catShortName = categoryMenuItems.category.short_name;
-       
+
         for (var i = 0; i < menuItems.length; i++) {
             // Insert menu item values
             var html = menuItemHtml;
