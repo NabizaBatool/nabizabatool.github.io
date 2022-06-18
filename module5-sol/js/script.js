@@ -21,9 +21,15 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
     var allCategoriesUrl = "https://davids-restaurant.herokuapp.com/categories.json";
     var categoriesTitleHtml = "snippets/categories-title-snippet.html";
     var categoryHtml = "snippets/category-snippet.html";
+    var menuItemsUrl = "https://davids-restaurant.herokuapp.com/menu_items.json?category=";
+    var menuItemsTitleHtml = "snippets/menu-items-title.html";
+    var menuItemHtml = "snippets/menu-item.html";
 
 
-  
+
+
+
+
 
     // Convenience function for inserting innerHTML for 'select'
     var insertHtml = function (selector, html) {
@@ -51,6 +57,24 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
     };
 
 
+    // Remove the class 'active' from home and switch to Menu button
+    var switchMenuToActive = function () {
+        // Remove 'active' from home button
+        var classes = document.querySelector("#navHomeButton").className;
+        classes = classes.replace(new RegExp("active", "g"), "");
+        //active wali hata di baqi classes wesy hi again 
+        document.querySelector("#navHomeButton").className = classes;
+
+        // Add 'active' to menu button if not already there
+        classes = document.querySelector("#navMenuButton").className;
+        //equals to -1 means not exist 
+        if (classes.indexOf("active") == -1) {
+            classes += " active";
+            document.querySelector("#navMenuButton").className = classes;
+        }
+    };
+
+
 
     // On page load (before images or CSS)
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -63,7 +87,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
                 document.querySelector("#main-content").innerHTML = responseText;
             },
             false);
-        });
+    });
 
     // Load the menu categories view
     dc.loadMenuCategories = function () {
@@ -73,9 +97,19 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
             buildAndShowCategoriesHTML);
     };
 
- // Builds HTML for the categories page based on the data
- // from the server
- //categories contain all categories , it is passed as parameter 
+
+    dc.loadMenuItems = function (categoryShort) {
+        showLoading("#main-content");
+        $ajaxUtils.sendGetRequest(
+            // +categoryshort bcz each  single category ki bhi category mein jana 
+            menuItemsUrl + categoryShort,
+            buildAndShowMenuItemsHTML);
+    };
+
+
+    // Builds HTML for the categories page based on the data
+    // from the server
+    //categories contain all categories json object return from heroku app  , it is passed as parameter 
     function buildAndShowCategoriesHTML(categories) {
         // Load title snippet of categories page
         $ajaxUtils.sendGetRequest(
@@ -85,6 +119,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
                 $ajaxUtils.sendGetRequest(
                     categoryHtml,
                     function (categoryHtml) {
+                        switchMenuToActive()
                         var categoriesViewHtml =
                             buildCategoriesViewHtml(categories,
                                 categoriesTitleHtml,
@@ -123,6 +158,130 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         return finalHtml;
     }
 
+
+
+    // Builds HTML for the single category page based on the data
+    // from the server , categorymenuitems json herokuapp object 
+    function buildAndShowMenuItemsHTML(categoryMenuItems) {
+        // Load title snippet of menu items page
+        $ajaxUtils.sendGetRequest(
+            menuItemsTitleHtml,
+            function (menuItemsTitleHtml) {
+                // Retrieve single menu item snippet
+                $ajaxUtils.sendGetRequest(
+                    menuItemHtml,
+                    function (menuItemHtml) {
+                        switchMenuToActive()
+                        var menuItemsViewHtml =
+                            buildMenuItemsViewHtml(categoryMenuItems,
+                                menuItemsTitleHtml,
+                                menuItemHtml);
+                        insertHtml("#main-content", menuItemsViewHtml);
+                    },
+                    false);
+            },
+            false);
+    }
+
+
+    // Using category and menu items data and snippets html
+    // build menu items view HTML to be inserted into page
+    function buildMenuItemsViewHtml(categoryMenuItems,
+        menuItemsTitleHtml,
+        menuItemHtml) {
+
+        menuItemsTitleHtml =
+            insertProperty(menuItemsTitleHtml,
+                "name",
+                categoryMenuItems.category.name);
+        menuItemsTitleHtml =
+            insertProperty(menuItemsTitleHtml,
+                "special_instructions",
+                categoryMenuItems.category.special_instructions);
+
+        var finalHtml = menuItemsTitleHtml;
+        finalHtml += "<section class='row'>";
+
+        // Loop over menu items
+        var menuItems = categoryMenuItems.menu_items;
+        // lunch ka short name is L 
+        var catShortName = categoryMenuItems.category.short_name;
+        for (var i = 0; i < menuItems.length; i++) {
+            // Insert menu item values
+            var html = menuItemHtml;
+            html =
+                insertProperty(html, "short_name", menuItems[i].short_name);
+            html =
+                insertProperty(html,
+                    "catShortName",
+                    catShortName);
+            html =
+                insertItemPrice(html,
+                    "price_small",
+                    menuItems[i].price_small);
+            html =
+                insertItemPortionName(html,
+                    "small_portion_name",
+                    menuItems[i].small_portion_name);
+            html =
+                insertItemPrice(html,
+                    "price_large",
+                    menuItems[i].price_large);
+            html =
+                insertItemPortionName(html,
+                    "large_portion_name",
+                    menuItems[i].large_portion_name);
+            html =
+                insertProperty(html,
+                    "name",
+                    menuItems[i].name);
+            html =
+                insertProperty(html,
+                    "description",
+                    menuItems[i].description);
+
+            // Add clearfix after every second menu (odd no) item q k some item decription is long some small so we dont want uper neechy hojaen grids 
+            if (i % 2 != 0) {
+                html +=
+                    "<div class='clearfix visible-lg-block visible-md-block'></div>";
+            }
+
+            finalHtml += html;
+        }
+
+        finalHtml += "</section>";
+        return finalHtml;
+    }
+
+
+    // Appends price with '$' if price exists
+    function insertItemPrice(html,
+        pricePropName,
+        priceValue) {
+        // If not specified, replace with empty string
+        if (!priceValue) {
+            return insertProperty(html, pricePropName, "");;
+        }
+        //convert into floating point 
+
+        priceValue = "$" + priceValue.toFixed(2);
+        html = insertProperty(html, pricePropName, priceValue);
+        return html;
+    }
+
+    // Appends portion name in parens if it exists
+    function insertItemPortionName(html,
+        portionPropName,
+        portionValue) {
+        // If not specified, return original string
+        if (!portionValue) {
+            return insertProperty(html, portionPropName, "");
+        }
+
+        portionValue = "(" + portionValue + ")";
+        html = insertProperty(html, portionPropName, portionValue);
+        return html;
+    }
 
     // $dc name with which we expose it to other script
     global.$dc = dc;
