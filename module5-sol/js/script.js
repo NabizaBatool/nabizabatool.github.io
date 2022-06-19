@@ -84,9 +84,9 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
     function buildAndShowHomeHTML(categories){
         $ajaxUtils.sendGetRequest(
             homeHtmlUrl,
-            function(homeHtmlUrl){
+            function(homeHtml){
                 var chosenCategoryShortName=chooseRandomCategory(categories).short_name;
-                var homeHtmlToInsertIntoMAinPage=insertProperty(homeHtmlUrl, "randomCategoryShortName", "'" + chosenCategoryShortName + "'");
+                var homeHtmlToInsertIntoMAinPage=insertProperty(homeHtml, "randomCategoryShortName", "'" + chosenCategoryShortName + "'");
                 insertHtml("#main-content" , homeHtmlToInsertIntoMAinPage)
             } ,
             false);
