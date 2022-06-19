@@ -78,24 +78,25 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         //url=fomehtml where the page is define , false mean not preprocess as json 
         $ajaxUtils.sendGetRequest(
             allCategoriesUrl,
-            buildAndShowHomeHTML ,
-            true);});
+            buildAndShowHomeHTML,
+            true);
+    });
 
-    function buildAndShowHomeHTML(categories){
+    function buildAndShowHomeHTML(categories) {
         $ajaxUtils.sendGetRequest(
             homeHtmlUrl,
-            function(homeHtml){
-                var chosenCategoryShortName=chooseRandomCategory(categories).short_name;
-                var homeHtmlToInsertIntoMainPage=insertProperty(homeHtml, "randomCategoryShortName", chosenCategoryShortName );
-                insertHtml("#main-content" , homeHtmlToInsertIntoMainPage)
-            } ,
+            function (homeHtmlUrl) {
+                var chosenCategoryShortName = chooseRandomCategory(categories).short_name;
+                var homeHtmlToInsertIntoMainPage = insertProperty(homeHtmlUrl, "randomCategoryShortName", chosenCategoryShortName);
+                insertHtml("#main-content", homeHtmlToInsertIntoMainPage)
+            },
             false);
-        }
-    
+    }
 
-    function chooseRandomCategory(categories){
+
+    function chooseRandomCategory(categories) {
         // selecting from nof of category available 
-        var randomArrayIndex=Math.floor(Math.random()*categories.length);
+        var randomArrayIndex = Math.floor(Math.random() * categories.length);
         return categories[randomArrayIndex];
 
     }
@@ -182,7 +183,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
                 $ajaxUtils.sendGetRequest(
                     menuItemHtml,
                     function (menuItemHtml) {
-                        switchMenuToActive();   
+                        switchMenuToActive();
                         var menuItemsViewHtml =
                             buildMenuItemsViewHtml(categoryMenuItems,
                                 menuItemsTitleHtml,
