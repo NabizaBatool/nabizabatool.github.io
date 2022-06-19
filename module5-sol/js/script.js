@@ -1,14 +1,19 @@
 $(function () { // Same as document.addEventListener("DOMContentLoaded"...
-
     // Same as document.querySelector("#navbarToggle").addEventListener("blur",...
+
+    //bcz button not collapse menu if we click anywhere 
     $("#navbarToggle").blur(function (event) {
-      var screenWidth = window.innerWidth;
-      if (screenWidth < 768) {
-        $("#collapsable-nav").collapse('hide');
-      }
+        var screenWidth = window.innerWidth;
+        // checking if we are on that screen size where that shows up
+        if (screenWidth < 768) {
+            $("#collapsable-nav").collapse('hide');
+        }
     });
-  });
-  
+});
+
+
+
+
   (function (global) {
   
   var dc = {};
@@ -38,6 +43,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   
   // Return substitute of '{{propName}}'
   // with propValue in given 'string'
+    // g means replace it everywhere not the first tym u see it , {{ propName }} shows namespaces , string reprsent the entire code in snippet
   var insertProperty = function (string, propName, propValue) {
     var propToReplace = "{{" + propName + "}}";
     string = string
@@ -54,6 +60,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   
     // Add 'active' to menu button if not already there
     classes = document.querySelector("#navMenuButton").className;
+     //equals to -1 means not exist 
     if (classes.indexOf("active") === -1) {
       classes += " active";
       document.querySelector("#navMenuButton").className = classes;
@@ -61,6 +68,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   };
   
   // On page load (before images or CSS)
+  // sabsy phely yechal jata that's why special tile wala func idhar
   document.addEventListener("DOMContentLoaded", function (event) {
   
   // TODO: STEP 0: Look over the code from
@@ -81,6 +89,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   // *** start ***
   // On first load, show home view
   showLoading("#main-content");
+  // false mean not preprocess as json 
   $ajaxUtils.sendGetRequest(
     allCategoriesUrl,
     function (request) {
@@ -154,6 +163,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   dc.loadMenuItems = function (categoryShort) {
     showLoading("#main-content");
     $ajaxUtils.sendGetRequest(
+        // +categoryshort bcz each  single category ki bhi category mein jana 
       menuItemsUrl + categoryShort,
       buildAndShowMenuItemsHTML);
   };
@@ -161,6 +171,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   
   // Builds HTML for the categories page based on the data
   // from the server
+  //categories contain all categories json object return from heroku app  , it is passed as parameter 
   function buildAndShowCategoriesHTML (categories) {
     // Load title snippet of categories page
     $ajaxUtils.sendGetRequest(
@@ -216,7 +227,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
   
   
   // Builds HTML for the single category page based on the data
-  // from the server
+  // from the server categorymenuitems json herokuapp object 
   function buildAndShowMenuItemsHTML (categoryMenuItems) {
     // Load title snippet of menu items page
     $ajaxUtils.sendGetRequest(
@@ -330,6 +341,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
                                  portionPropName,
                                  portionValue) {
     // If not specified, return original string
+    // Add clearfix after every second menu (odd no) item q k some item decription is long some small so we dont want uper neechy hojaen grids 
     if (!portionValue) {
       return insertProperty(html, portionPropName, "");
     }
