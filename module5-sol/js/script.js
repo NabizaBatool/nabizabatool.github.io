@@ -51,6 +51,15 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         return string;
     };
 
+
+    function chooseRandomCategory(categories) {
+        // selecting from nof of category available 
+        var randomArrayIndex = Math.floor(Math.random() * categories.length);
+        return categories[randomArrayIndex];
+
+    }
+
+
     // Remove the class 'active' from home and switch to Menu button
     var switchMenuToActive = function () {
         // Remove 'active' from home button
@@ -78,7 +87,8 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         //url=fomehtml where the page is define , false mean not preprocess as json 
         $ajaxUtils.sendGetRequest(
             allCategoriesUrl,
-            buildAndShowHomeHTML,
+            function (request) {
+                buildAndShowHomeHTML(request)},
             true);
     });
 
@@ -94,13 +104,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
     }
 
 
-    function chooseRandomCategory(categories) {
-        // selecting from nof of category available 
-        var randomArrayIndex = Math.floor(Math.random() * categories.length);
-        return categories[randomArrayIndex];
-
-    }
-
+   
     // Load the menu categories view
     dc.loadMenuCategories = function () {
         showLoading("#main-content");
