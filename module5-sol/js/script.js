@@ -17,7 +17,7 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
 (function (global) {
 
     var dc = {};
-    var homeHtml = "snippets/home-snippet.html";
+    var homeHtmlUrl = "snippets/home-snippet.html";
     var allCategoriesUrl = "https://davids-restaurant.herokuapp.com/categories.json";
     var categoriesTitleHtml = "snippets/categories-title-snippet.html";
     var categoryHtml = "snippets/category-snippet.html";
@@ -51,12 +51,6 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
         return string;
     };
 
-
-
-
-
-
-
     // Remove the class 'active' from home and switch to Menu button
     var switchMenuToActive = function () {
         // Remove 'active' from home button
@@ -77,17 +71,34 @@ $(function () { // Same as document.addEventListener("DOMContentLoaded"...
 
 
     // On page load (before images or CSS)
+    // sabsy phely yechal jata that's why special tile wala func idhar
     document.addEventListener("DOMContentLoaded", function (event) {
         // On first load, show home view
         showLoading("#main-content");
         //url=fomehtml where the page is define , false mean not preprocess as json 
         $ajaxUtils.sendGetRequest(
-            homeHtml,
-            function (responseText) {
-                document.querySelector("#main-content").innerHTML = responseText;
-            },
+            allCategoriesUrl,
+            buildAndShowHomeHTML ,
+            true);});
+
+    function buildAndShowHomeHTML(categories){
+        $ajaxUtils.sendGetRequest(
+            homeHtmlUrl,
+            function(homeHtmlUrl){
+                var chosenCategoryShortName=chooseRandomCategory(categories).short_name;
+                var homeHtmlToInsertIntoMAinPage=insertProperty(homeHtmlUrl, "randomCategoryShortName", "'" + chosenCategoryShortName + "'");
+                insertHtml("#main-content" , homeHtmlToInsertIntoMAinPage)
+            } ,
             false);
-    });
+        }
+    
+
+    function chooseRandomCategory(categories){
+        // selecting from nof of category available 
+        var randomArrayIndex=Math.floor(Math.random()*categories.length);
+        return categories[randomArrayIndex];
+
+    }
 
     // Load the menu categories view
     dc.loadMenuCategories = function () {
